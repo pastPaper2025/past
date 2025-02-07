@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAST: Phonetic-Acoustic Speech Tokenizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin: 50px 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header h2 {
+            font-size: 18px;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .links {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #0066cc;
+            margin: 0 15px;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .links a img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        .abstract-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .abstract-container h3 {
+            font-size: 20px;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .figure {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .samples-section {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .config-section h3 {
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .dropdown {
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 250px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PAST: Phonetic-Acoustic Speech Tokenizer</h1>
+    </div>
+
+    <div class="samples-section">
+        <h2>Speech Generation Samples</h2>
+
+        <h3>Select Configuration</h3>
+        <div class="dropdown">
+            <label for="top_k">Top-K:</label>
+            <select id="top_k">
+                <option value="25">25</option>
+                <option value="10">10</option>
+                <option value="10">100</option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <label for="temp">Temperature:</label>
+            <select id="temp">
+                <option value="0.8">0.8</option>
+                <option value="0.3">0.3</option>
+                <option value="1.2">1.2</option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <label for="top_p">Top-P:</label>
+            <select id="top_p">
+                <option value="0.0">0.0</option>
+                <option value="0.5">0.8</option>
+                <option value="0.9">0.95</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Prompt</th>
+                    <th>SpeechTokenizer</th>
+                    <th>X-Codec</th>
+                    <th>PAST</th>
+                </tr>
+            </thead>
+            <tbody id="samples-table">
+                <!-- Content will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const totalPrompts = 10; 
+    
+        function updateTable() {
+            const topK = document.getElementById("top_k").value;
+            const temp = document.getElementById("temp").value;
+            const topP = document.getElementById("top_p").value;
+            const configKey = `${topK}_${temp}_${topP}`; 
+    
+            const tableBody = document.getElementById("samples-table");
+            tableBody.innerHTML = ""; 
+    
+            for (let i = 0; i <= totalPrompts - 1; i++) {
+                const row = `
+                    <tr>
+                        <td>
+                            <audio controls>
+                                <source src="page/promets/promet_${i}.wav" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </td>
+                        <td>
+                            <audio controls>
+                                <source src="page/SpeechTokenizer/promt${i}/${configKey}.wav" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </td>
+                        <td>
+                            <audio controls>
+                                <source src="page/xcodec/promt${i}/${configKey}.wav" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </td>
+                        <td>
+                            <audio controls>
+                                <source src="page/past/promt${i}/${configKey}.wav" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            }
+        }
+    
+        document.getElementById("top_k").addEventListener("change", updateTable);
+        document.getElementById("temp").addEventListener("change", updateTable);
+        document.getElementById("top_p").addEventListener("change", updateTable);
+    
+        updateTable();
+    </script>
+
+</body>
+</html>
